@@ -1,20 +1,20 @@
 from __future__ import division
-from os import getcwd  , path 
 from biom.table import Table
+from biom import load_table 
 import numpy as np
 
-def make_partial_table(table_fp):
+def make_partial_table(table_fp , output_dir):
 
-    if not path.exists(table_fp):
-        raise IOError("File doesnt exist ! "+getcwd())
-    
     current_ko = None
     otu_list = []
     
     #Fixing the full and midial path management
-    table_p = "/".join(table_fp.split("/")[:-1])
-    table_name = table_fp.split("/")[-1]
-    output_name = table_p+"/ko_summary."+table_name
+    if not len(table_fp.split("/")) > 0 :
+        table_p = "/".join(table_fp.split("/")[:-1])
+        table_name = table_fp.split("/")[-1]
+        output_name = table_p+"/ko_summary."+table_name
+    else:
+        output_name = "/".join([output_dir , table_fp])
     
     int_result = open(output_name , "w")
     
@@ -43,12 +43,37 @@ def make_partial_table(table_fp):
     int_result.close()
     return output_name
 
-def construct_biom_KO_contrib_tables(table_fp):
+
+
+
+def make_ko_network_table(data , otus , kos , predicted , otu_table ):
+    #Loading the tables 
+    pred_table = load_table(predicted)
+    otu_table  = load_table(otu_table)
+    
+    #Extract the taxonomy 
+    otus_taxa = []
+    for otu in otus:
+        tmp = otu_table.metadata(otu,"observation")
+        otus_taxa.append(tmp)
+    
+    #Extract KO taxa
+    ko_taxa = []
+    for ko in kos:
+        tmp = pred_table.metadata(ko , "observation")
+        ko_taxa.append(tmp)
+    
+    network_table = Table(data ,otus , kos , otus_taxa , ko_taxa  , "Ko_network")
+    return network_table
+   
+
+
+def make_ko_contrib_table(table_fp , otu_table , predicted_table , output_dir):
     KO = []
     Otus = set()
     
     #Fixing for file path 
-    file_fp = make_partial_table(table_fp)
+    file_fp = make_partial_table(table_fp , output_dir)
     output_p = "/".join(file_fp.split("/")[:-1])
     table_name = file_fp.split("/")[-1]
     
@@ -76,17 +101,10 @@ def construct_biom_KO_contrib_tables(table_fp):
     
     #write down the tables  
     ##sample = ko
-    ko_as_sample = Table(data,Otus,KO)
-    doc = open(output_p+"/ko_as_sample."+table_name , "w")
-    doc.write(ko_as_sample.to_json("KO_CONTRIB_SCRIPT"))
+    ko_network_table = make_ko_network_table(data , Otus ,
+                                             KO  , predicted_table , otu_table)
+    doc = open(output_p+"/ko_network."+ table_name , "w")
+    doc.write(ko_network_table.to_json("KO_NETWORK"))
     doc.close()
-    
-    
-    ##sample = otu
-    Otu_as_sample = Table(data.T , KO , Otus)
-    doc = open(output_p+"/otu_as_sample."+table_name, "w")
-    doc.write(Otu_as_sample.to_json("KO_CONTRIB_SCRIPT"))
-    doc.close()
-         
-            
-
+    pass
+   
