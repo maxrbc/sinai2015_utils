@@ -14,7 +14,7 @@ def take_args():
     parse.add_argument("-i" , help="Biom table with the otus from the analysis" , required= True , dest='otu_table' , type = str )
     parse.add_argument("-p" , help='prediction table resulting from the picrust analysis' , required=True , dest='predicted_table' , type=str )
     parse.add_argument("-c" , help='KO contributions map from the analysis done with picrust' , required=True , dest='ko_contrib' , type=str)
-    parse.add_argument("-f" , help="Force write the output dir" , dest="force_write" , action="store_true" ,  type = bool)
+    parse.add_argument("-f" , help="Force write the output dir" , dest="force_write" , action="store_true" )
     parse.add_argument("-o" , help="Output directory" , required=True , dest='output_dir' , type=str )
     
     return parse.parse_args()
