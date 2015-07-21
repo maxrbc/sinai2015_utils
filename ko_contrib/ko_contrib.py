@@ -108,7 +108,7 @@ def make_ko_contrib_table(table_fp , otu_table , predicted_table , output_dir):
                                              KO  , predicted_table , otu_table)
     #doc = open(output_p+"/ko_network."+ table_name , "w")
     with biom_open(output_p+"/ko_network."+ table_name , "w") as biom_file:
-        ko_network_table.to_hdf5(biom_file , "KO_NETWORK" , False )
+        ko_network_table.to_hdf5(biom_file , "KO_NETWORK" ,True )
     #doc.close()
     pass
    
