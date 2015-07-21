@@ -8,6 +8,7 @@ Created on Wed Jun 24 09:02:43 2015
 from ko_contrib import make_ko_contrib_table as construct
 import argparse as args
 import os
+import shutil as sh 
 
 def take_args():
     parse = args.ArgumentParser()
@@ -35,6 +36,11 @@ def main():
         raise IOError("KO contributions file doesnt exist")
     
     if os.path.exists(opt.output_dir) and opt.force_write or not os.path.exists(opt.output_dir):
+        try :
+            sh.rmtree(opt.output_dir)
+        except OSError:
+             pass
+         
         os.mkdir(opt.output_dir)
     
     
