@@ -1,7 +1,9 @@
 from __future__ import division
+
 from biom.table import Table
 from biom.util import biom_open
 from biom import load_table 
+
 import numpy as np
 
 def make_partial_table(table_fp , output_dir):
@@ -106,7 +108,7 @@ def make_ko_contrib_table(table_fp , otu_table , predicted_table , output_dir):
                                              KO  , predicted_table , otu_table)
     #doc = open(output_p+"/ko_network."+ table_name , "w")
     with biom_open(output_p+"/ko_network."+ table_name , "w") as biom_file:
-        ko_network_table.to_hdf5(biom_file , "KO_NETWORK",True)
+        ko_network_table.to_hdf5(biom_file , "KO_NETWORK" , False )
     #doc.close()
     pass
    
