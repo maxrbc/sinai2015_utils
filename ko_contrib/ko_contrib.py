@@ -17,7 +17,7 @@ def make_partial_table(table_fp , output_dir):
         table_name = table_fp.split("/")[-1]
         output_name = table_p+"/ko_summary."+table_name
     else:
-        output_name = "/".join([output_dir , table_fp])
+        output_name = "/".join([output_dir , "ko_contrib.summary.txt"])
     
     int_result = open(output_name , "w")
     
