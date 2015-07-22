@@ -106,9 +106,12 @@ def make_ko_contrib_table(table_fp , otu_table , predicted_table , output_dir):
     ##sample = ko
     ko_network_table = make_ko_network_table(data , Otus ,
                                              KO  , predicted_table , otu_table)
-    #doc = open(output_p+"/ko_network."+ table_name , "w")
-    with biom_open(output_p+"/ko_network."+ table_name , "w") as biom_file:
-        ko_network_table.to_hdf5(biom_file , "KO_NETWORK" ,True )
-    #doc.close()
+    
+    with open(output_p+"/ko_network."+ table_name , "w") as biom_file:
+        ko_network_table.to_json( "KO_NETWORK" , biom_file)
+
+#    with biom_open(output_p+"/ko_network."+ table_name , "w") as biom_file:
+#        ko_network_table.to_hdf5(biom_file , "KO_NETWORK" ,True )
+#    
     pass
    
