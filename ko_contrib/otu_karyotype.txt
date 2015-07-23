@@ -1,6 +1,0 @@
-chr - p__Deferribacteres p__Deferribacteres 0 1 p__Deferribacteres
-chr - p__TM7 p__TM7 0 1 p__TM7
-chr - p__Actinobacteria p__Actinobacteria 0 5 p__Actinobacteria
-chr - p__Firmicutes p__Firmicutes 0 237 p__Firmicutes
-chr - p__Bacteroidetes p__Bacteroidetes 0 61 p__Bacteroidetes
-chr - p__Proteobacteria p__Proteobacteria 0 4 p__Proteobacteria

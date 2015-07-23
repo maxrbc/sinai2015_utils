@@ -2,6 +2,11 @@
 __pycache__/
 *.py[cod]
 
+#Text file in any point 
+*.txt
+*.csv
+*.tsv
+
 # C extensions
 *.so
 
