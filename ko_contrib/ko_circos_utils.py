@@ -46,7 +46,7 @@ def extract_kos_with_taxa(biom_table , path_level = 0):
 chrm_tmpl = "chr - %(ID)s %(LABEL)s %(START)s %(END)s %(COLOR)s\n"
 band_tmpl = "band %(PARENT)s %(ID)s %(LABEL)s %(START)s %(END)s %(COLOR)s\n"
 
-def making_karyotype(biom_table , taxa_level = 1 , path_level = 0):
+def making_karyotype(biom_table ,output_dir=".", taxa_level = 1 , path_level = 0):
     
     #extracting the groups and names 
     otus = extract_otus_with_taxa(biom_table , taxa_level)
@@ -58,7 +58,7 @@ def making_karyotype(biom_table , taxa_level = 1 , path_level = 0):
     
     #Makig otu karyotype
     tmpl = {}
-    otu_karyo = open('otu_karyotype.txt' , "w")
+    otu_karyo = open(output_dir+'/otu_karyotype.txt' , "w")
     for chrm , size  in otus_chrm:
         tmpl['ID'] = chrm 
         tmpl['LABEL'] = chrm
@@ -89,7 +89,7 @@ def making_karyotype(biom_table , taxa_level = 1 , path_level = 0):
     otu_karyo.close()
     
     #Making ko karyotype 
-    ko_karyo = open('ko_karyotype.txt', 'w')
+    ko_karyo = open(output_dir+'/ko_karyotype.txt', 'w')
     for chrm , size  in kos_chrm:
         tmpl['ID'] = chrm 
         tmpl['LABEL'] = chrm
