@@ -122,5 +122,6 @@ def making_karyotype(biom_table ,output_dir=".", taxa_level = 1 , path_level = 0
 
     
     
-    
+def make_circos_conf(ko_path , out_path , output_dir):
+    pass
     
