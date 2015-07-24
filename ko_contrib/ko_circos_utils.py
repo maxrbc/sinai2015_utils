@@ -11,7 +11,7 @@ import seaborn as sns
 
 
 GET_QUANT_BY_GROUP = lambda x : (x[0] , len(x[1]))
-TO_RGB = lambda x : ( int(x[0] * 255 ) , int(x[1]*255) , int(x[2]*255) )
+TO_RGB = lambda x : ( int(x[0]*255) , int(x[1]*255) , int(x[2]*255) )
 
 
 
@@ -131,8 +131,8 @@ def making_karyotype(biom_table ,output_dir=".", taxa_level = 1 , path_level = 0
 
 
 def make_color_reference(biom_table , taxa_level = 1 , path_level = 0):
-    ko_quant = map(GET_QUANT_BY_GROUP , extract_kos_with_taxa(biom_table , path_level))
-    otu_quant = map(GET_QUANT_BY_GROUP , extract_otus_with_taxa(biom_table , taxa_level))
+    ko_quant = map(GET_QUANT_BY_GROUP , extract_kos_with_taxa(biom_table , path_level).iteritems())
+    otu_quant = map(GET_QUANT_BY_GROUP , extract_otus_with_taxa(biom_table , taxa_level).iteritems())
 
     ko_name , ko_size = zip(*ko_quant)
     otu_name , otu_size = zip(*otu_quant)
@@ -146,7 +146,9 @@ def make_color_reference(biom_table , taxa_level = 1 , path_level = 0):
     colors = sns.color_palette('Set2' , len(group))
 
     for member , color  in zip(group , colors):
-        color_reference[member] = TO_RGB(colors)
+        print member 
+        print color
+        color_reference[member] = TO_RGB(color)
 
     return color_reference
 
