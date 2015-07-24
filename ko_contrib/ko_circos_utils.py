@@ -5,7 +5,14 @@ Created on Wed Jul 22 16:26:31 2015
 
 @author: xaradrim
 """
+
+
+import seaborn as sns
+
+
 GET_QUANT_BY_GROUP = lambda x : (x[0] , len(x[1]))
+TO_RGB = lambda x : ( int(x[0] * 255 ) , int(x[1]*255) , int(x[2]*255) )
+
 
 
 def extract_otus_with_taxa(biom_table ,taxa_level = 1):
@@ -120,8 +127,34 @@ def making_karyotype(biom_table ,output_dir=".", taxa_level = 1 , path_level = 0
     ko_karyo.close()
     return
 
+
+
+
+def make_color_reference(biom_table , taxa_level = 1 , path_level = 0):
+    ko_quant = map(GET_QUANT_BY_GROUP , extract_kos_with_taxa(biom_table , path_level))
+    otu_quant = map(GET_QUANT_BY_GROUP , extract_otus_with_taxa(biom_table , taxa_level))
+
+    ko_name , ko_size = zip(*ko_quant)
+    otu_name , otu_size = zip(*otu_quant)
+
+    group = []
+    group.extend(ko_name)
+    group.extend(otu_name)
+
+
+    color_reference = {}
+    colors = sns.color_palette('Set2' , len(group))
+
+    for member , color  in zip(group , colors):
+        color_reference[member] = TO_RGB(colors)
+
+    return color_reference
+
+
     
-    
+
+    pass
+
 def make_circos_conf(ko_path , out_path , output_dir):
     pass
     
