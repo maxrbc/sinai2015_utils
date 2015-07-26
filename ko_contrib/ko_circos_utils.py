@@ -98,6 +98,7 @@ def making_karyotype(biom_table ,output_dir=".", taxa_level = 1 , path_level = 0
     #Making ko karyotype 
     ko_karyo = open(output_dir+'/ko_karyotype.txt', 'w')
     for chrm , size  in kos_chrm:
+        chrm = chrm.replace(" " , "_")
         tmpl['ID'] = chrm 
         tmpl['LABEL'] = chrm
         tmpl['START'] = 0
@@ -108,13 +109,19 @@ def making_karyotype(biom_table ,output_dir=".", taxa_level = 1 , path_level = 0
     
     #add bands now
     for chrm , size in kos_chrm:
+        # carefull with order in here
+        #chrm needs to be replace but reference in the dict
+        #must be found first then change the reference name
         ko_list = kos[chrm]
+        chrm = chrm.replace(" " , "_")
+
         index = 0
         count = 0
         while index < size:
             tmpl['PARENT'] = chrm
-            tmpl['ID'] =  ko_list[index]
-            tmpl['LABEL'] = ".".join([ko_list[index] , chrm])
+            tmpl['ID'] = ".".join([ko_list[index] , chrm])
+            tmpl['LABEL'] = ko_list[index]
+
             tmpl['START'] = count
             tmpl['END'] = count+1
             tmpl['COLOR'] = chrm
@@ -146,8 +153,11 @@ def make_color_reference(biom_table , taxa_level = 1 , path_level = 0):
     colors = sns.color_palette('Set2' , len(group))
 
     for member , color  in zip(group , colors):
-        print member 
-        print color
+        #Names cant have whitespaces between
+        #they must be separated using something else
+        #this case an underscore
+
+        member = member.replace(" " , "_")
         color_reference[member] = TO_RGB(color)
 
     return color_reference
@@ -157,6 +167,92 @@ def make_color_reference(biom_table , taxa_level = 1 , path_level = 0):
 
     pass
 
-def make_circos_conf(ko_path , out_path , output_dir):
+def make_circos_conf(biom_table , ko_path , out_path , output_dir):
+    templ = '''
+
+################################################################
+# The remaining content is standard and required. It is imported
+# from default files in the Circos distribution.
+#
+# These should be present in every Circos configuration file and
+# overridden as required. To see the content of these files,
+# look in etc/ in the Circos distribution.
+
+<image>
+# Included from Circos distribution.
+<<include etc/image.conf>>
+</image>
+
+# RGB/HSV color definitions, color lists, location of fonts, fill patterns.
+# Included from Circos distribution.
+<<include etc/colors_fonts_patterns.conf>>
+
+# Debugging, I/O an dother system parameters
+# Included from Circos distribution.
+<<include etc/housekeeping.conf>>
+
+<ideogram>
+
+
+<spacing>
+default = 0.005r
+</spacing>
+
+radius    = 0.9r
+thickness = 20p
+fill      = yes
+
+
+##########################################################################
+label
+
+show_label       = yes
+label_font       = light
+
+# 50 pixels outside the outer ideogram radius
+label_radius = dims(ideogram,radius_outer) + 200p
+
+# 5% of inner radius outside outer ideogram radius
+# label_radius = dims(ideogram,radius_outer) + 0.05r
+
+# inside ideogram
+# label_radius = (dims(ideogram,radius_inner)+dims(ideogram,radius_outer))/2-24
+
+# 100 pixels inside the ideogram radius
+# label_radius = dims(ideogram,radius_inner) - 100p
+
+label_with_tag   = yes
+label_size       = 5
+label_parallel   = no
+label_case       = upper
+
+##########################################################################
+
+
+</ideogram>
+
+
+'''
+    conf_fp = "/".join([output_dir , "circos.conf"])
+
+    tmp = ["\n<colors>"]
+
+    for name , color in make_color_reference(biom_table).iteritems():
+        n_color = "{0[0]},{0[1]},{0[2]}".format(color)
+        t = "{} = {} ".format(name , n_color)
+        tmp.append(t)
+    tmp.append("</colors>\n")
+    coloring = "\n".join(tmp)
+    karyo = "karyotype = {},{}\n\n".format(ko_path , out_path)
+
+
+
+
+    doc = open(conf_fp , "w")
+    doc.write(karyo)
+    doc.write(templ)
+    doc.write(coloring)
+    doc.close()
+
     pass
     
