@@ -11,6 +11,9 @@ __pycache__/
 # C extensions
 *.so
 
+#Unnecesary information by me =D 
+*.xml
+
 # Distribution / packaging
 .Python
 env/
