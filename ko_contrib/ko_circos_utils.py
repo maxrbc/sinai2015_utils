@@ -53,6 +53,49 @@ def extract_kos_with_taxa(biom_table , path_level = 0):
 chrm_tmpl = "chr - %(ID)s %(LABEL)s %(START)s %(END)s %(COLOR)s\n"
 band_tmpl = "band %(PARENT)s %(ID)s %(LABEL)s %(START)s %(END)s %(COLOR)s\n"
 
+
+
+def generate_band_location(biom_table  , taxa_level = 1 , path_level = 0):
+    #extracting the groups and names
+    otus = extract_otus_with_taxa(biom_table , taxa_level)
+    kos = extract_kos_with_taxa(biom_table , path_level)
+
+    # Acq chrm header band information for the groups
+    otu_taxa_group = map(GET_QUANT_BY_GROUP , otus.iteritems())
+    ko_path_group = map(GET_QUANT_BY_GROUP , kos.iteritems())
+
+    result = {'otus' : {} , 'keggs' : {} }
+
+    #For the otus
+
+    for taxa , size in otu_taxa_group:
+        otu_list = otus[taxa]
+        index = 0
+        count = 0
+        while index < size :
+            result['otus'][otu_list[index]] = (".".join([otu_list[index] , taxa]), count , count+1)
+            count = count + 2
+            index = index + 1
+
+    for path , size in ko_path_group :
+        ko_list = kos[path]
+        index = 0
+        count = 0
+        while index < size :
+            #make the tuple
+            temp = (".".join([ko_list[index] , path.replace(" " , "_")]) , count , count + 1)
+            kegg = ko_list[index]
+            if not kegg in result['keggs'].keys() :
+                result['keggs'][kegg] = [temp,]
+            else:
+                result['keggs'][kegg].append(temp)
+            count = count +2
+            index = index +1
+
+    return result
+
+
+
 def making_karyotype(biom_table ,output_dir=".", taxa_level = 1 , path_level = 0):
     
     #extracting the groups and names 
@@ -167,6 +210,36 @@ def make_color_reference(biom_table , taxa_level = 1 , path_level = 0):
 
     pass
 
+
+
+def get_values_associated_with_id(table , id , axis = 'observation'):
+        axis_class = 'sample'
+        if axis_class == axis :
+                axis_class = 'observation'
+        print axis_class , axis , "\n"
+
+        temp = {id : [] }
+        for  i in table.ids(axis_class):
+                if axis_class == 'sample' :
+                        sample = i
+                        obs = id
+                else :
+                        sample = id
+                        obs = i
+                if table.get_value_by_ids(obs , sample) > 0:
+                        temp[id].append(i)
+        return temp
+
+
+
+
+
+
+
+
+
+
+
 def make_circos_conf(biom_table , ko_path , out_path , output_dir):
     templ = '''
 
@@ -203,33 +276,52 @@ thickness = 20p
 fill      = yes
 
 
-##########################################################################
-label
-
-show_label       = yes
-label_font       = light
-
-# 50 pixels outside the outer ideogram radius
-label_radius = dims(ideogram,radius_outer) + 200p
-
-# 5% of inner radius outside outer ideogram radius
-# label_radius = dims(ideogram,radius_outer) + 0.05r
-
-# inside ideogram
-# label_radius = (dims(ideogram,radius_inner)+dims(ideogram,radius_outer))/2-24
-
-# 100 pixels inside the ideogram radius
-# label_radius = dims(ideogram,radius_inner) - 100p
-
-label_with_tag   = yes
-label_size       = 5
-label_parallel   = no
-label_case       = upper
-
-##########################################################################
+# ##########################################################################
+# label
+#
+# show_label       = yes
+# label_font       = light
+#
+# # 50 pixels outside the outer ideogram radius
+# label_radius = dims(ideogram,radius_outer) + 200p
+#
+# # 5% of inner radius outside outer ideogram radius
+# # label_radius = dims(ideogram,radius_outer) + 0.05r
+#
+# # inside ideogram
+# # label_radius = (dims(ideogram,radius_inner)+dims(ideogram,radius_outer))/2-24
+#
+# # 100 pixels inside the ideogram radius
+# # label_radius = dims(ideogram,radius_inner) - 100p
+#
+# label_with_tag   = yes
+# label_size       = 5
+# label_parallel   = no
+# label_case       = upper
+#
+# ##########################################################################
 
 
 </ideogram>
+
+
+##########################################################################
+#LINKS
+
+<links>
+<link>
+ribbon        = yes
+radius        = 0.95r
+bezier_radius = 0.1r
+crest         = 0.85
+file          = links.txt
+color         = black
+</link>
+</links>
+
+
+
+##########################################################################
 
 
 '''
@@ -255,4 +347,4 @@ label_case       = upper
     doc.close()
 
     pass
-    
+
