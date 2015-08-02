@@ -47,11 +47,26 @@ def extract_kos_with_taxa(biom_table , path_level = 0):
                 result[pathway[path_level]] = [ko,]
                 
     return result
-                
 
-## chr - ID LABEL START END COLOR
-chrm_tmpl = "chr - %(ID)s %(LABEL)s %(START)s %(END)s %(COLOR)s\n"
-band_tmpl = "band %(PARENT)s %(ID)s %(LABEL)s %(START)s %(END)s %(COLOR)s\n"
+
+def get_values_associated_with_id(table , id , axis = 'observation'):
+        axis_class = 'sample'
+        if axis_class == axis :
+                axis_class = 'observation'
+        print axis_class , axis , "\n"
+
+        temp = {id : [] }
+        for  i in table.ids(axis_class):
+                if axis_class == 'sample' :
+                        sample = i
+                        obs = id
+                else :
+                        sample = id
+                        obs = i
+                if table.get_value_by_ids(obs , sample) > 0:
+                        temp[id].append(i)
+        return temp
+
 
 
 
@@ -64,10 +79,22 @@ def generate_band_location(biom_table  , taxa_level = 1 , path_level = 0):
     otu_taxa_group = map(GET_QUANT_BY_GROUP , otus.iteritems())
     ko_path_group = map(GET_QUANT_BY_GROUP , kos.iteritems())
 
+    #Structure for storing the band positioning
+
+    '''
+    result {
+                otus : {
+                           OTU_ID : ( id.band_parent , start , end )
+
+                        }
+
+                Keggs: {
+                            KEGG_ID : [ ( id.band_parent , start , end ) , ( id.band_parent , start , end ) ]
+                        }
+
+    '''
+
     result = {'otus' : {} , 'keggs' : {} }
-
-    #For the otus
-
     for taxa , size in otu_taxa_group:
         otu_list = otus[taxa]
         index = 0
@@ -96,7 +123,13 @@ def generate_band_location(biom_table  , taxa_level = 1 , path_level = 0):
 
 
 
+
+
 def making_karyotype(biom_table ,output_dir=".", taxa_level = 1 , path_level = 0):
+
+    ## chr - ID LABEL START END COLOR
+    chrm_tmpl = "chr - %(ID)s %(LABEL)s %(START)s %(END)s %(COLOR)s\n"
+    band_tmpl = "band %(PARENT)s %(ID)s %(LABEL)s %(START)s %(END)s %(COLOR)s\n"
     
     #extracting the groups and names 
     otus = extract_otus_with_taxa(biom_table , taxa_level)
@@ -209,31 +242,6 @@ def make_color_reference(biom_table , taxa_level = 1 , path_level = 0):
     
 
     pass
-
-
-
-def get_values_associated_with_id(table , id , axis = 'observation'):
-        axis_class = 'sample'
-        if axis_class == axis :
-                axis_class = 'observation'
-        print axis_class , axis , "\n"
-
-        temp = {id : [] }
-        for  i in table.ids(axis_class):
-                if axis_class == 'sample' :
-                        sample = i
-                        obs = id
-                else :
-                        sample = id
-                        obs = i
-                if table.get_value_by_ids(obs , sample) > 0:
-                        temp[id].append(i)
-        return temp
-
-
-
-
-
 
 
 

@@ -7,7 +7,7 @@ __pycache__/
 *.csv
 *.tsv
 *.xml
-
+*.iml
 # C extensions
 *.so
 
