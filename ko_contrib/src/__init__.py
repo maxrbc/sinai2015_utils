@@ -1,2 +1,2 @@
 __author__ = 'xaradrim'
-__add__ = ['ko_contrib' , 'make_circos' , 'utils']
+__add__ = {'ko_contrib', 'make_circos', 'utils'}

@@ -6,9 +6,11 @@ Created on Wed Jul 22 16:26:31 2015
 @author: xaradrim
 """
 
-from seaborn import color_palette
+import os
+from utils import extract_kos_with_taxa , extract_otus_with_taxa , GET_QUANT_BY_GROUP , \
+    make_color_reference , get_values_associated_with_id
 
-from utils import extract_kos_with_taxa , extract_otus_with_taxa , GET_QUANT_BY_GROUP , make_color_reference
+
 
 
 def generate_band_location(biom_table, taxa_level=1, path_level=0):
@@ -73,6 +75,34 @@ def generate_band_location(biom_table, taxa_level=1, path_level=0):
             index = index + 1
 
     return result
+
+
+def make_links(generated_bands ,table, output_dir='.'):
+
+    link_doc = open(os.path.join(output_dir , 'links.txt') , 'w')
+
+    for otu in generated_bands['otus'].keys():
+
+        # getting related keggs to the specify otu
+        kegg_related = get_values_associated_with_id(table , otu)
+        otu_band    = generated_bands['otus'][otu][0].split('.')[1]
+        otu_start   = str(generated_bands['otus'][otu][1])
+        otu_end     = str(generated_bands['otus'][otu][2])
+        otu_link    = " ".join([otu_band , str(otu_start) , str(otu_end) ])
+
+        for kegg in kegg_related[otu]:
+            for kegg_info in generated_bands['keggs'][kegg]:
+                kegg_band   = kegg_info[0].split('.')[1]
+                kegg_start  = str(kegg_info[1])
+                kegg_end    = str(kegg_info[2])
+                kegg_link   = " ".join([kegg_band , kegg_start , kegg_end])
+
+                link  = " ".join([otu_link , kegg_link , "\n"])
+                link_doc.write(link)
+
+    link_doc.close()
+
+    pass
 
 
 def making_karyotype(generated_bands, output_dir="."):

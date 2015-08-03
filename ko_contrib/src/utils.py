@@ -29,8 +29,13 @@ def extract_kos_with_taxa(biom_table, path_level=0):
 
         for pathway in pathway_list:
 
+            #Need to check this with jose , but for now
+            #So it works
             if 'None' in pathway:
-                continue
+                if pathway[0] in result.keys():
+                    result[pathway[0]].append(ko)
+                else:
+                    result[pathway[0]] = [ko, ]
 
             elif pathway[path_level] in result.keys():
                 result[pathway[path_level]].append(ko)
