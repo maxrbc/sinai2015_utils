@@ -11,6 +11,43 @@ from utils import extract_kos_with_taxa, extract_otus_with_taxa, GET_QUANT_BY_GR
     make_color_reference, get_values_associated_with_id
 
 
+
+
+def generate_bands_ko_otu(biom_table):
+    otu_list = biom_table.ids(axis='observation')
+    ko_list = biom_table.ids()
+
+
+    result = {'otu_chrm': [], 'otus': {}, 'kegg_chrm': [], 'keggs': {}}
+    result['otu_chrm'] = [('otus' , 0 , (len(otu_list)*2)-1  )]
+    result['kegg_chrm'] = [('keggs' , 0 , (len(ko_list)*2)-1 )]
+
+    for otu in otu_list :
+        count = 0
+        index = 0
+        while index < len(otu_list):
+            id_parent = ".".join([otu , 'otus'])
+            otu_start = count
+            otu_end = count+1
+            result['otus'][otu] = (id_parent,otu_start , otu_end )
+            index = index + 1
+            count = count + 2
+
+    for kegg in ko_list :
+        count = 0
+        index = 0
+        while index < len(ko_list):
+            id_parent = ".".join([kegg , 'keggs'])
+            ko_start = count
+            ko_end = count +1
+            result['keggs'][kegg] = [(id_parent , ko_start , ko_end)]
+            count = count + 2
+            index = index + 1
+
+    return result
+
+
+
 def generate_band_location(biom_table, taxa_level=1, path_level=0):
     # extracting the groups and names
     otus = extract_otus_with_taxa(biom_table, taxa_level)

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4c1c9d65-7bda-4086-8a57-4c55bbfb93a7" name="Default" comment="Code clean up and relocation , next implementation for links file">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ko_contrib/src/make_circos.py" afterPath="$PROJECT_DIR$/ko_contrib/src/make_circos.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="sinai2015_utils.iws" />
@@ -26,8 +27,8 @@
       <file leaf-file-name="make_circos.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ko_contrib/src/make_circos.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.74626863">
-              <caret line="250" column="0" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
+            <state vertical-scroll-proportion="-0.3880597">
+              <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
               <folding>
                 <element signature="e#110#119#0" expanded="true" />
               </folding>
@@ -386,7 +387,31 @@
       <option name="project" value="LOCAL" />
       <updated>1438621114995</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Code clean up and relocation , next implementation for links file">
+      <created>1438621121460</created>
+      <option name="number" value="00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1438621121460</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Fixing problem with max_links">
+      <created>1438621545488</created>
+      <option name="number" value="00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1438621545488</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Code clean up and relocation , next implementation for links file">
+      <created>1438623654813</created>
+      <option name="number" value="00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1438623654813</updated>
+    </task>
+    <task id="LOCAL-00010" summary="FIX">
+      <created>1438624385743</created>
+      <option name="number" value="00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1438624385743</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -430,11 +455,13 @@
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <MESSAGE value="testing the pip option to install the program" />
     <MESSAGE value="Fix code to work as package and new making bands structure to create links file" />
-    <MESSAGE value="Code clean up and relocation , next implementation for links file" />
     <MESSAGE value="Link integration should be working now  , next to test the formater for the image creation at the vm." />
     <MESSAGE value="Fix error on chrm name creation for the KO karyo" />
     <MESSAGE value="Problems with the max_links  i can draw .... this is no good" />
-    <option name="LAST_COMMIT_MESSAGE" value="Problems with the max_links  i can draw .... this is no good" />
+    <MESSAGE value="Fixing problem with max_links" />
+    <MESSAGE value="Code clean up and relocation , next implementation for links file" />
+    <MESSAGE value="FIX" />
+    <option name="LAST_COMMIT_MESSAGE" value="FIX" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -690,8 +717,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ko_contrib/src/make_circos.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.74626863">
-          <caret line="250" column="0" selection-start-line="250" selection-start-column="0" selection-end-line="250" selection-end-column="0" />
+        <state vertical-scroll-proportion="-0.3880597">
+          <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
           <folding>
             <element signature="e#110#119#0" expanded="true" />
           </folding>
