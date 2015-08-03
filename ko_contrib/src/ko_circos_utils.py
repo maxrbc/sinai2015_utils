@@ -47,23 +47,26 @@ def extract_kos_with_taxa(biom_table, path_level=0):
     return result
 
 
-def get_values_associated_with_id(table, id, axis='observation'):
-    axis_class = 'sample'
-    if axis_class == axis:
-        axis_class = 'observation'
-    print axis_class, axis, "\n"
+def get_values_associated_with_id(table,value_id):
+    result = {}
+    temp = []
 
-    temp = {id: []}
-    for i in table.ids(axis_class):
-        if axis_class == 'sample':
-            sample = i
-            obs = id
-        else:
-            sample = id
-            obs = i
-        if table.get_value_by_ids(obs, sample) > 0:
-            temp[id].append(i)
-    return temp
+    if value_id in table.ids():
+        #we got a sample ( KEGGS )
+        for obs in table.ids(axis='observation'):
+            if table.get_value_by_ids(obs , value_id) > 0 :
+                temp.append(obs)
+
+    elif value_id in table.ids(axis='observation'):
+        #we got a observation ( OTU )
+        for sample in table.ids():
+            if table.get_value_by_ids(value_id , sample ) > 0 :
+                temp.append(sample)
+    else :
+        raise AttributeError('The entered ID : '+value_id+', Doesnt exist in biom table ')
+
+    result[str(value_id)] = temp
+    return result
 
 
 def generate_band_location(biom_table, taxa_level=1, path_level=0):
@@ -79,19 +82,29 @@ def generate_band_location(biom_table, taxa_level=1, path_level=0):
 
     '''
     result {
+                otu_chrm : [ ( id.band , start , end ) , ( id.band , start , end ) ]
+
+                kegg_chrm : [ ( id.band , start , end ) , ( id.band , start , end ) ]
+
                 otus : {
-                           OTU_ID : ( id.band_parent , start , end )
+                           OTU_ID : ( id.band_parent , start , end ) ,
 
                         }
 
-                Keggs: {
-                            KEGG_ID : [ ( id.band_parent , start , end ) , ( id.band_parent , start , end ) ]
+                keggs: {
+                            KEGG_ID : [ ( id.band_parent , start , end ) , ( id.band_parent , start , end ) ] ,
+
                         }
 
     '''
 
-    result = {'otus': {}, 'keggs': {}}
+    result = { 'otu_chrm' : [] , 'otus': {}, 'kegg_chrm' : [] , 'keggs': {} }
+
+
+    #otu bands
+
     for taxa, size in otu_taxa_group:
+        result['otu_chrm'].append((taxa , 0 , (size*2) - 1))
         otu_list = otus[taxa]
         index = 0
         count = 0
@@ -101,6 +114,7 @@ def generate_band_location(biom_table, taxa_level=1, path_level=0):
             index = index + 1
 
     for path, size in ko_path_group:
+        result['kegg_chrm'].append((path , 0 , (size*2) -1 ))
         ko_list = kos[path]
         index = 0
         count = 0
@@ -111,96 +125,81 @@ def generate_band_location(biom_table, taxa_level=1, path_level=0):
             if not kegg in result['keggs'].keys():
                 result['keggs'][kegg] = [temp, ]
             else:
-                list (result['keggs'][kegg]).append(temp)
+                result['keggs'][kegg].append(temp)
             count = count + 2
             index = index + 1
 
     return result
 
 
-def making_karyotype(biom_table, output_dir=".", taxa_level=1, path_level=0):
+def making_karyotype(generated_bands, output_dir="."):
+
     ## chr - ID LABEL START END COLOR
     chrm_tmpl = "chr - %(ID)s %(LABEL)s %(START)s %(END)s %(COLOR)s\n"
     band_tmpl = "band %(PARENT)s %(ID)s %(LABEL)s %(START)s %(END)s %(COLOR)s\n"
-
-    # extracting the groups and names
-    otus = extract_otus_with_taxa(biom_table, taxa_level)
-    kos = extract_kos_with_taxa(biom_table, path_level)
-
-    # Acq chrm header band information for the groups
-    otus_chrm = map(GET_QUANT_BY_GROUP, otus.iteritems())
-    kos_chrm = map(GET_QUANT_BY_GROUP, kos.iteritems())
-
-    # Makig otu karyotype
     tmpl = {}
+
+   #############################################################################
+   ##### Making the Otu karyotype
+
     otu_karyo = open(output_dir + '/otu_karyotype.txt', "w")
-    for chrm, size in otus_chrm:
-        tmpl['ID'] = chrm
-        tmpl['LABEL'] = chrm
-        tmpl['START'] = 0
-        tmpl['END'] = (size * 2) - 1
-        tmpl['COLOR'] = chrm
+    for taxa, start , end  in generated_bands['otu_chrm']:
+        tmpl['ID'] = taxa
+        tmpl['LABEL'] = taxa
+        tmpl['START'] = start
+        tmpl['END'] = end
+        tmpl['COLOR'] = taxa
         line = chrm_tmpl % tmpl
         otu_karyo.write(line)
 
     # add the bands
-    for chrm, size in otus_chrm:
-        otu_list = otus[chrm]
-        index = 0
-        count = 0
-        while index < size:
-            tmpl['PARENT'] = chrm
-            tmpl['ID'] = otu_list[index]
-            tmpl['LABEL'] = otu_list[index]
-            tmpl['START'] = count
-            tmpl['END'] = count + 1
-            tmpl['COLOR'] = chrm
+    for id_parent , start, end  in generated_bands['otus'].values():
 
-            count = count + 2
-            index = index + 1
+        tmpl['PARENT'] = id_parent.split(".")[1]
+        tmpl['ID'] = id_parent.split(".")[0]
+        tmpl['LABEL'] = id_parent.split(".")[0]
+        tmpl['START'] = start
+        tmpl['END'] = end
+        tmpl['COLOR'] = id_parent.split(".")[1]
 
-            line = band_tmpl % tmpl
-            otu_karyo.write(line)
+        line = band_tmpl % tmpl
+        otu_karyo.write(line)
+
     otu_karyo.close()
 
-    # Making ko karyotype
+    #############################################################################
+
+    #############################################################################
+    #### Making KEGG karyotype
+
     ko_karyo = open(output_dir + '/ko_karyotype.txt', 'w')
-    for chrm, size in kos_chrm:
-        chrm = chrm.replace(" ", "_")
-        tmpl['ID'] = chrm
-        tmpl['LABEL'] = chrm
-        tmpl['START'] = 0
-        tmpl['END'] = (size * 2) - 1
-        tmpl['COLOR'] = chrm
+    for path, start , end  in generated_bands['kegg_chrm']:
+        tmpl['ID'] = path
+        tmpl['LABEL'] = path
+        tmpl['START'] = start
+        tmpl['END'] = end
+        tmpl['COLOR'] = path
         line = chrm_tmpl % tmpl
         ko_karyo.write(line)
 
     # add bands now
-    for chrm, size in kos_chrm:
-        # carefull with order in here
-        # chrm needs to be replace but reference in the dict
-        # must be found first then change the reference name
-        ko_list = kos[chrm]
-        chrm = chrm.replace(" ", "_")
+    for t in generated_bands['keggs'].values():
 
-        index = 0
-        count = 0
-        while index < size:
-            tmpl['PARENT'] = chrm
-            tmpl['ID'] = ".".join([ko_list[index], chrm])
-            tmpl['LABEL'] = ko_list[index]
+        for id_parent ,start ,end in t:
 
-            tmpl['START'] = count
-            tmpl['END'] = count + 1
-            tmpl['COLOR'] = chrm
-
-            count = count + 2
-            index = index + 1
-
+            tmpl['PARENT'] = id_parent.split(".")[1]
+            tmpl['ID'] = id_parent
+            tmpl['LABEL'] = id_parent.split(".")[0]
+            tmpl['START'] = start
+            tmpl['END'] = end
+            tmpl['COLOR'] = id_parent.split(".")[1]
             line = band_tmpl % tmpl
             ko_karyo.write(line)
+
     ko_karyo.close()
-    return
+
+    #############################################################################
+    pass
 
 
 def make_color_reference(biom_table, taxa_level=1, path_level=0):
