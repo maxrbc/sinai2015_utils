@@ -192,7 +192,7 @@ def make_circos_conf(biom_table, max_links , ko_path='ko_karyotype.txt', out_pat
 # Debugging, I/O an dother system parameters
 # Included from Circos distribution.
 <<include etc/housekeeping.conf>>
-max_links     = {}
+max_links*     = {}
 
 <ideogram>
 
