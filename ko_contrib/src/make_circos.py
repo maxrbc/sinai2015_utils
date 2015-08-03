@@ -75,6 +75,7 @@ def generate_band_location(biom_table, taxa_level=1, path_level=0):
 
 
 def make_links(generated_bands, table, output_dir='.'):
+    links_size = 0
     link_doc = open(os.path.join(output_dir, 'links.txt'), 'w')
 
     for otu in generated_bands['otus'].keys():
@@ -94,11 +95,11 @@ def make_links(generated_bands, table, output_dir='.'):
                 kegg_link = " ".join([kegg_band, kegg_start, kegg_end])
 
                 link = " ".join([otu_link, kegg_link, "\n"])
+                links_size = links_size + 1
                 link_doc.write(link)
 
     link_doc.close()
-
-    pass
+    return links_size
 
 
 def making_karyotype(generated_bands, output_dir="."):
@@ -168,7 +169,7 @@ def making_karyotype(generated_bands, output_dir="."):
     pass
 
 
-def make_circos_conf(biom_table, ko_path='ko_karyotype.txt', out_path='otu_karyotype.txt', output_dir='.'):
+def make_circos_conf(biom_table, max_links , ko_path='ko_karyotype.txt', out_path='otu_karyotype.txt', output_dir='.'):
     templ = '''
 
 ################################################################
@@ -238,6 +239,7 @@ fill      = yes
 
 <links>
 <link>
+max_links     = {}
 ribbon        = yes
 radius        = 0.95r
 bezier_radius = 0.1r
@@ -263,7 +265,7 @@ color         = black
         tmp.append(t)
     tmp.append("</colors>\n")
     coloring = "\n".join(tmp)
-    karyo = "karyotype = {},{}\n\n".format(ko_path, out_path)
+    karyo = "karyotype = {},{}\n\n".format(ko_path, out_path , max_links)
 
     doc = open(conf_fp, "w")
     doc.write(karyo)
