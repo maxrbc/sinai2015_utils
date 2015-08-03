@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4c1c9d65-7bda-4086-8a57-4c55bbfb93a7" name="Default" comment="Code clean up and relocation , next implementation for links file">
+    <list default="true" id="4c1c9d65-7bda-4086-8a57-4c55bbfb93a7" name="Default" comment="add new function to generate very simple ko vs otu bands">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ko_contrib/src/make_circos.py" afterPath="$PROJECT_DIR$/ko_contrib/src/make_circos.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -27,8 +27,8 @@
       <file leaf-file-name="make_circos.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ko_contrib/src/make_circos.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.3880597">
-              <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.52238804">
+              <caret line="35" column="13" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
               <folding>
                 <element signature="e#110#119#0" expanded="true" />
               </folding>
@@ -411,7 +411,13 @@
       <option name="project" value="LOCAL" />
       <updated>1438624385743</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="add new function to generate very simple ko vs otu bands">
+      <created>1438629240456</created>
+      <option name="number" value="00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1438629240456</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -461,7 +467,8 @@
     <MESSAGE value="Fixing problem with max_links" />
     <MESSAGE value="Code clean up and relocation , next implementation for links file" />
     <MESSAGE value="FIX" />
-    <option name="LAST_COMMIT_MESSAGE" value="FIX" />
+    <MESSAGE value="add new function to generate very simple ko vs otu bands" />
+    <option name="LAST_COMMIT_MESSAGE" value="add new function to generate very simple ko vs otu bands" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -717,8 +724,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ko_contrib/src/make_circos.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.3880597">
-          <caret line="15" column="25" selection-start-line="15" selection-start-column="25" selection-end-line="15" selection-end-column="25" />
+        <state vertical-scroll-proportion="0.52238804">
+          <caret line="35" column="13" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
           <folding>
             <element signature="e#110#119#0" expanded="true" />
           </folding>

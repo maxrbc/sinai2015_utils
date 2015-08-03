@@ -22,27 +22,27 @@ def generate_bands_ko_otu(biom_table):
     result['otu_chrm'] = [('otus' , 0 , (len(otu_list)*2)-1  )]
     result['kegg_chrm'] = [('keggs' , 0 , (len(ko_list)*2)-1 )]
 
+    count = 0
+    index = 0
     for otu in otu_list :
-        count = 0
-        index = 0
-        while index < len(otu_list):
-            id_parent = ".".join([otu , 'otus'])
-            otu_start = count
-            otu_end = count+1
-            result['otus'][otu] = (id_parent,otu_start , otu_end )
-            index = index + 1
-            count = count + 2
 
+        id_parent = ".".join([otu , 'otus'])
+        otu_start = count
+        otu_end = count+1
+        result['otus'][otu] = (id_parent,otu_start , otu_end )
+        index = index + 1
+        count = count + 2
+
+    count = 0
+    index = 0
     for kegg in ko_list :
-        count = 0
-        index = 0
-        while index < len(ko_list):
-            id_parent = ".".join([kegg , 'keggs'])
-            ko_start = count
-            ko_end = count +1
-            result['keggs'][kegg] = [(id_parent , ko_start , ko_end)]
-            count = count + 2
-            index = index + 1
+
+        id_parent = ".".join([kegg , 'keggs'])
+        ko_start = count
+        ko_end = count +1
+        result['keggs'][kegg] = [(id_parent , ko_start , ko_end)]
+        count = count + 2
+        index = index + 1
 
     return result
 
