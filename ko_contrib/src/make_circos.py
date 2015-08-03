@@ -265,11 +265,11 @@ color         = black
         tmp.append(t)
     tmp.append("</colors>\n")
     coloring = "\n".join(tmp)
-    karyo = "karyotype = {},{}\n\n".format(ko_path, out_path , max_links)
+    karyo = "karyotype = {},{}\n\n".format(ko_path, out_path )
 
     doc = open(conf_fp, "w")
     doc.write(karyo)
-    doc.write(templ)
+    doc.write(templ.format(max_links))
     doc.write(coloring)
     doc.close()
 
