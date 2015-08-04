@@ -292,7 +292,7 @@ color         = black
 
 
 '''
-    conf_fp = "/".join([output_dir, "circos.conf"])
+    conf_fp  = os.path.join(output_dir , "circos.conf")
 
     tmp = ["\n<colors>"]
 

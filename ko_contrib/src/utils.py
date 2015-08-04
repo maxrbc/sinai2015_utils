@@ -29,8 +29,8 @@ def extract_kos_with_taxa(biom_table, path_level=0):
 
         for pathway in pathway_list:
 
-            #Need to check this with jose , but for now
-            #So it works
+            # Need to check this with jose , but for now
+            # So it works
             if 'None' in pathway:
                 if pathway[0] in result.keys():
                     result[pathway[0]].append(ko)
@@ -70,10 +70,19 @@ def make_color_reference(biom_table, taxa_level=1, path_level=0):
 
     return color_reference
 
+
     pass
 
 
 def get_values_associated_with_id(table, value_id):
+    '''
+    Get all values that are associated with the given id
+
+    :rtype : dict
+    :param table: biom table object
+    :param value_id: id to be searched { ex. '15478' if OTU or 'KO5487' if KEGG}
+    :return: { id : [link1 , link2 , link 3]
+    '''
     result = {}
     temp = []
 
