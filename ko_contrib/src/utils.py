@@ -46,16 +46,7 @@ def extract_kos_with_taxa(biom_table, path_level=0):
     return result
 
 
-def make_color_reference(biom_table, taxa_level=1, path_level=0):
-    ko_quant = map(GET_QUANT_BY_GROUP, extract_kos_with_taxa(biom_table, path_level).iteritems())
-    otu_quant = map(GET_QUANT_BY_GROUP, extract_otus_with_taxa(biom_table, taxa_level).iteritems())
-
-    ko_name, ko_size = zip(*ko_quant)
-    otu_name, otu_size = zip(*otu_quant)
-
-    group = []
-    group.extend(ko_name)
-    group.extend(otu_name)
+def make_color_reference(group):
 
     color_reference = {}
     colors = color_palette('Set2', len(group))
@@ -69,9 +60,6 @@ def make_color_reference(biom_table, taxa_level=1, path_level=0):
         color_reference[member] = TO_RGB(color)
 
     return color_reference
-
-
-    pass
 
 
 def get_values_associated_with_id(table, value_id):

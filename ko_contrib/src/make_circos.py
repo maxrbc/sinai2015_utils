@@ -206,7 +206,7 @@ def making_karyotype(generated_bands, output_dir="."):
     pass
 
 
-def make_circos_conf(biom_table, max_links , ko_path='ko_karyotype.txt', out_path='otu_karyotype.txt', output_dir='.'):
+def make_circos_conf(generated_bands, max_links , ko_path='ko_karyotype.txt', out_path='otu_karyotype.txt', output_dir='.'):
     templ = '''
 
 ################################################################
@@ -296,8 +296,10 @@ color         = black
     print conf_fp
 
     tmp = ["\n<colors>"]
+    chrm_group=map( lambda x : x[0] , generated_bands['otu_chrm'])
+    chrm_group.extend(map( lambda x : x[0] , generated_bands['kegg_chrm']))
 
-    for name, color in make_color_reference(biom_table).iteritems():
+    for name, color in make_color_reference(chrm_group).iteritems():
         n_color = "{0[0]},{0[1]},{0[2]}".format(color)
         t = "{} = {} ".format(name, n_color)
         tmp.append(t)
